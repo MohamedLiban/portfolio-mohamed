@@ -1,6 +1,8 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import type { ReactNode, CSSProperties } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import type {} from "react";
+import type {} from "react/jsx-runtime";
 import {
   Code2,
   Database,
@@ -23,15 +25,19 @@ import {
 const LINKEDIN_URL =
   "https://www.linkedin.com/in/mohamed-liban-187b77153/?originalSubdomain=se";
 
+// React + TypeScript single-file portfolio (Vite + Tailwind v4 + Framer Motion + Lucide)
+
 export default function PortfolioApp(): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const [spin, setSpin] = useState<number>(0);
   const [showContact, setShowContact] = useState<boolean>(false);
 
+  // Refs for smooth scroll targets inside the slide
   const cvRef = useRef<HTMLDivElement | null>(null);
   const projectsRef = useRef<HTMLDivElement | null>(null);
   const contactRef = useRef<HTMLDivElement | null>(null);
 
+  // Cool spin + auto-scroll to CV when opening the slide
   useEffect(() => {
     if (open) {
       setSpin(720);
@@ -44,6 +50,7 @@ export default function PortfolioApp(): JSX.Element {
     }
   }, [open]);
 
+  // Orbit labels around the circle
   const orbitItems = useMemo<OrbitItem[]>(
     () => [
       { label: "CV & About", icon: <FileText className="w-5 h-5" />, onClick: () => cvRef.current?.scrollIntoView({ behavior: "smooth" }) },
@@ -56,7 +63,7 @@ export default function PortfolioApp(): JSX.Element {
     []
   );
 
-  // ===== Data =====
+  // ===== Data (updated CV & Skills; repos & links preserved) =====
   const skills: SkillCategory[] = [
     {
       title: "Programming & Web",
@@ -82,6 +89,7 @@ export default function PortfolioApp(): JSX.Element {
     },
   ];
 
+  // Work experience
   const experience: ExperienceItem[] = [
     {
       role: "Youth Worker – HVB Home",
@@ -109,7 +117,7 @@ export default function PortfolioApp(): JSX.Element {
     },
   ];
 
-  // Featured GitHub repos
+  // Projects split into clear groups
   const featuredRepos: ProjectItem[] = [
     {
       name: "CleanCodeRepo",
@@ -125,7 +133,6 @@ export default function PortfolioApp(): JSX.Element {
     },
   ];
 
-  // LIA work
   const liaProjects: ProjectItem[] = [
     {
       name: "ASP.NET Core Webapp",
@@ -139,14 +146,11 @@ export default function PortfolioApp(): JSX.Element {
     },
   ];
 
-  // This portfolio (now with demoUrl + url)
   const thisPortfolio: ProjectItem[] = [
     {
       name: "React Portfolio (this)",
       stack: ["React", "Tailwind", "Framer Motion", "TypeScript"],
       desc: "Interactive single-page portfolio with animated orbit navigation.",
-      demoUrl: "https://portfolio-mohamed-pc2p.vercel.app",
-      url: "https://github.com/MohamedLiban/portfolio-mohamed",
     },
   ];
 
@@ -167,6 +171,7 @@ export default function PortfolioApp(): JSX.Element {
 
   return (
     <div className="relative min-h-screen text-white overflow-hidden bg-slate-950">
+      {/* Background */}
       <AnimatedBackground />
 
       {/* Header */}
@@ -198,7 +203,7 @@ export default function PortfolioApp(): JSX.Element {
         <div className="grid md:grid-cols-2 gap-10 items-center">
           <div>
             <h2 className="text-4xl sm:text-5xl font-black leading-[1.1]">
-              Curious & driven <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to violet-400">Junior Developer</span>
+              Curious & driven <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-violet-400">Junior Developer</span>
             </h2>
             <p className="mt-4 text-white/80">
               29-year-old Junior .NET Developer who recently graduated. Skilled in C#, .NET, React and TypeScript with hands-on LIA experience in
@@ -252,7 +257,7 @@ export default function PortfolioApp(): JSX.Element {
         </div>
       </main>
 
-      {/* Contact Modal */}
+      {/* Contact Modal (popup) */}
       <AnimatePresence>
         {showContact && (
           <motion.div
@@ -301,7 +306,7 @@ export default function PortfolioApp(): JSX.Element {
         )}
       </AnimatePresence>
 
-      {/* Slide-in portfolio */}
+      {/* Slide-in portfolio with orbit */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -325,8 +330,8 @@ export default function PortfolioApp(): JSX.Element {
                 </button>
               </div>
 
+              {/* Orbit */}
               <div className="relative mt-8 grid lg:grid-cols-2 gap-10 items-center">
-                {/* Orbit */}
                 <div className="relative w-full aspect-square max-w-[520px] mx-auto">
                   <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/10 to-white/5 border border-white/10" />
                   <motion.div
@@ -497,7 +502,7 @@ export default function PortfolioApp(): JSX.Element {
                     </Card>
                   </div>
 
-                  {/* Playground */}
+                  {/* Playground / Test cases */}
                   <Card title="Playground & Test cases" icon={<FlaskConical className="w-5 h-5" />}>
                     <Playground />
                   </Card>
@@ -578,6 +583,7 @@ function ProjectCard({ p }: { p: ProjectItem }): JSX.Element {
 }
 
 function OrbitChip({ index, total, children }: { index: number; total: number; children: ReactNode }): JSX.Element {
+  // Position child around a circle using rotate/translate technique
   const angle = (index / total) * 360;
   const style: CSSProperties = { transform: `rotate(${angle}deg) translateY(-38%) translateX(0) rotate(-${angle}deg)` };
   return (
